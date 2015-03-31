@@ -1,0 +1,10 @@
+# Executables
+*.out
+*.hex
+
+# Precompiled Headers
+*.ghc
+*.phc
+
+# Temporary files
+*~
