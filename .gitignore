@@ -8,3 +8,7 @@
 
 # Temporary files
 *~
+*.swp
+
+# Compiled Files
+*.pyc

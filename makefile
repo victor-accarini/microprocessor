@@ -10,10 +10,10 @@ DEPS = util.h mem.h uart.h fuctions.h
 
 all: main main.hex avrdude
 
-main: main.c functions.c util.c mem.c uart.c
+main.out: main.c functions.c util.c mem.c uart.c
 	$(CC) -mmcu=$(MMCU) -o $@ $^ $(CFLAGS) 
 
-main.hex: main
+main.hex: main.out
 	$(OBJCPY) -j .text -j .data -O ihex $< $@
 
 avrdude: main.hex

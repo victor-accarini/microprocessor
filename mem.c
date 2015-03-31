@@ -40,6 +40,32 @@ void _Init_ADC()
 	TIMSK |= (1 << 0); // Enable Interrupt
 }
 
+void _EEPROM_Send_Data(unsigned int Address, unsigned char Data)
+{
+	/* Wait until last bit is writen */
+	while (EECR & (1 << EEWE));
+	/* Set up address and data to be sent */	
+	EEAR = Address;
+	EEDR = Data;
+	/* Set EEMWE(Write Enable) */
+	EECR |= (1 << EEMWE);
+	/* Start writing */
+	EECR |= (1 << EEWE);
+	_delay_ms(5);
+}	
+
+unsigned char _EEPROM_Receive_Data(unsigned int Address){
+	/* Wait for completion of previous write */
+	while (EECR & (1 << EEWE));
+	/* Set up address */
+	EEAR = Address;
+	/* Start reading */
+	EECR |= (1 << EERE);
+	_delay_ms(10);
+	/* Return data */
+	return EEDR;
+}
+
 void _Enable_SPI()
 {
 	/* Set MOSI and SCK output, all others input */

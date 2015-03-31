@@ -23,6 +23,8 @@ unsigned char ADC_Data, *ADC_DataAddress;
 void _Init_Mem();
 void _Init_Peripheral();
 void _Init_ADC();
+void _EEPROM_Send_Data(unsigned int Address, unsigned char Data);
+unsigned char _EEPROM_Receive_Data(unsigned int Address);
 void _Enable_SPI();
 void _Disable_SPI();
 void _ADC_Start();
