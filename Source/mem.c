@@ -40,12 +40,20 @@ void _Init_ADC()
 	TIMSK |= (1 << 0); // Enable Interrupt
 }
 
-void _Init_SPI()
+void _Enable_SPI()
 {
 	/* Set MOSI and SCK output, all others input */
 	DDRB = (1<<PB5)|(1<<PB7);
 	/* Enable SPI, Master, set clock rate fck/4 */
 	SPCR = (1<<SPE)|(1<<MSTR)|(0<<SPR0);
+}
+
+void _Disable_SPI()
+{//??????? TODO: See if this function is necessary
+	/* Set MOSI and SCK output, all others input */
+	DDRB &= ~((1<<PB5)|(1<<PB7));
+	/* Enable SPI, Master, set clock rate fck/4 */
+	SPCR &= ~((1<<SPE)|(1<<MSTR)|(0<<SPR0));
 }
 
 void _ADC_Start()
@@ -57,7 +65,7 @@ void _ADC_Start()
 
 void EnableInterrupts()
 {
-	MCUCR = MCUCR | (1 << ISC01) | (1 << ISC00);
+	MCUCR = MCUCR | (1 << ISC01) | (1 << ISC00); // Rising Edge interrupt
 	GICR = GICR | (1 << INT0);
 	sei();
 }
