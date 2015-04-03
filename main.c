@@ -46,10 +46,10 @@ ISR(TIMER0_COMP_vect)
 int main(void)
 {	
 
-	unsigned char *cp, *cp2;
+	unsigned char *cp;
 	
 	//unsigned int i, off1, off2, off3;
-	unsigned char str[160], arg1[15];//, arg2[15], arg3[15];
+	//unsigned char str[160], arg1[15], arg2[15], arg3[15];
 	//unsigned int hexnum;
 	
 	
@@ -67,13 +67,13 @@ int main(void)
 	//{
 		_ADC_Start();
 		_delay_ms(2000);
-		
+		cp = (unsigned char*)0x4000;	
 		DisableInterrupts();
 		_EEPROM_Send_Data(0x001,ADC_Data);
 		(*cp) = _EEPROM_Receive_Data(0x001);
 		EnableInterrupts();
 		if (ADC_Data == 0x33)
-			putLine("YES");	
+			putLine((unsigned char*)"YES");	
 		//Input command
 		//getLine(str);
 		//putLine(str);
@@ -157,4 +157,5 @@ int main(void)
 		_delay_ms(500);
 	}
 	*/
+	return 0;
 }
