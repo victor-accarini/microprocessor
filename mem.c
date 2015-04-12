@@ -51,7 +51,7 @@ void _EEPROM_Send_Data(unsigned int Address, unsigned char Data)
 	EECR |= (1 << EEMWE);
 	/* Start writing */
 	EECR |= (1 << EEWE);
-	_delay_ms(5);
+	_delay_ms(10);
 }	
 
 unsigned char _EEPROM_Receive_Data(unsigned int Address){
@@ -61,7 +61,6 @@ unsigned char _EEPROM_Receive_Data(unsigned int Address){
 	EEAR = Address;
 	/* Start reading */
 	EECR |= (1 << EERE);
-	_delay_ms(10);
 	/* Return data */
 	return EEDR;
 }

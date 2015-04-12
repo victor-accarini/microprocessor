@@ -61,7 +61,7 @@ int main(void)
 	
 	EnableInterrupts();
 	
-	ADC_DataAddress = (unsigned char*)0x2000;
+	ADC_DataAddress = (unsigned char*)0x4001;
 
 	//while(1)
 	//{
@@ -70,10 +70,12 @@ int main(void)
 		cp = (unsigned char*)0x4000;	
 		DisableInterrupts();
 		_EEPROM_Send_Data(0x001,ADC_Data);
-		(*cp) = _EEPROM_Receive_Data(0x001);
+		(*cp) = ~_EEPROM_Receive_Data(0x001);
 		EnableInterrupts();
 		if (ADC_Data == 0x33)
-			putLine((unsigned char*)"YES");	
+			putLine((unsigned char*)"YES");
+		else
+			putLine((unsigned char*)"NO");
 		//Input command
 		//getLine(str);
 		//putLine(str);
