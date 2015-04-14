@@ -30,8 +30,8 @@ ISR(INT0_vect)
 	//Read data from 8255 PORTB
 	ADC_Data = (*ADC);
 	//Send Data to LEDs
-	//ADC = ADC_PA_Address;
-	//(*ADC_DataAddress) = (unsigned char)~(ADC_Data);
+	ADC = ADC_PA_Address;
+	(*ADC_DataAddress) = (unsigned char)~(ADC_Data);
 	//Disable Output
 	PORTB &= ~(1 << ADC_Output);
 }
@@ -48,8 +48,8 @@ int main(void)
 
 	unsigned char *cp;
 	
-	//unsigned int i, off1, off2, off3;
-	//unsigned char str[160], arg1[15], arg2[15], arg3[15];
+	unsigned int i, off1, off2, off3;
+	unsigned char str[160], arg1[15], arg2[15], arg3[15];
 	//unsigned int hexnum;
 	
 	
@@ -61,21 +61,30 @@ int main(void)
 	
 	EnableInterrupts();
 	
-	ADC_DataAddress = (unsigned char*)0x4001;
+	ADC_DataAddress = (unsigned char*)0x4000;
 
 	//while(1)
 	//{
-		_ADC_Start();
-		_delay_ms(2000);
-		cp = (unsigned char*)0x4000;	
-		DisableInterrupts();
-		_EEPROM_Send_Data(0x001,ADC_Data);
-		(*cp) = ~_EEPROM_Receive_Data(0x001);
-		EnableInterrupts();
-		if (ADC_Data == 0x33)
-			putLine((unsigned char*)"YES");
-		else
-			putLine((unsigned char*)"NO");
+		for (i = 0; i < 512; i++)
+		{
+			_ADC_Start();
+			_delay_ms(10);
+			DisableInterrupts();
+			_EEPROM_Send_Data(i,ADC_Data);
+			EnableInterrupts();
+		}
+		for (i = 0; i < 512; i++)
+		{
+			DisableInterrupts();
+			(*cp) = ~_EEPROM_Receive_Data(i);
+			EnableInterrupts();
+			Hex2Asc((unsigned int)(*cp),str);
+			putLine(str);
+		}
+		//if (ADC_Data == 0x33)
+		//	putLine((unsigned char*)"YES");
+		//else
+		//	putLine((unsigned char*)"NO");
 		//Input command
 		//getLine(str);
 		//putLine(str);
