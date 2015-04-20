@@ -99,19 +99,27 @@ void _SPI_Transmit(unsigned char Data)
 
 void _SPI_Send_Data(unsigned int Address, unsigned char Data)
 {
+	unsigned char temp;
+	
 	//Chip Select Down
+	_delay_us(10);
 	PORTB &= ~(1 << PB4);
+	_delay_us(10);
 	/* Start transmission */
 	SPDR = SPI_WriteEnable;
 	/* Wait for transmission complete */
 	while (!(SPSR & (1<<SPIF)))
 	;
 	//Chip Select up
+	_delay_us(10);
 	PORTB |= (1 << PB4);
+	_delay_us(10);
 	//Delay
 	_delay_us(10);
 	//Chip Select Down
+	_delay_us(10);
 	PORTB &= ~(1 << PB4);
+	_delay_us(10);
 	//WriteCommand
 	/* Start transmission */
 	SPDR = SPI_Write;
@@ -136,23 +144,38 @@ void _SPI_Send_Data(unsigned int Address, unsigned char Data)
 	while (!(SPSR & (1<<SPIF)))
 	;
 	//Chip Select up
+	_delay_us(10);
 	PORTB |= (1 << PB4);
-	_delay_us(100);
+	_delay_us(10);
+	
+	
+	//Wait for the write to be completed
+	do 
+	{
+		//Chip Select Down
+		_delay_us(10);
+		PORTB &= ~(1 << PB4);
+		_delay_us(10);
+		/* Start transmission */
+		SPDR = SPI_ReadStatusReg;
+		/* Wait for transmission complete */
+		while (!(SPSR & (1<<SPIF)))
+		;
+		//Generate Clock
+		SPDR = 0x00;
+		/* Wait for transmission complete */
+		while (!(SPSR & (1<<SPIF)))
+		;
+		temp = SPDR;
+		//Chip Select up
+		_delay_us(10);
+		PORTB |= (1 << PB4);
+		_delay_us(10);
+	} while ((temp & 0x01) == 0x01);
 }
 
 unsigned char _SPI_Receive_Data(unsigned int Address)
 {
-	//Chip Select Down
-	PORTB &= ~(1 << PB4);
-	//Reset Write Enable Command
-	SPDR = SPI_ResetWrEnable;
-	/* Wait for transmission complete */
-	while (!(SPSR & (1<<SPIF)))
-	;
-	//Chip Select Up
-	PORTB |= (1 << PB4);
-	//Delay
-	_delay_us(10);
 	//Chip Select Down
 	PORTB &= ~(1 << PB4);
 	//ReadCommand
@@ -173,7 +196,7 @@ unsigned char _SPI_Receive_Data(unsigned int Address)
 	while (!(SPSR & (1<<SPIF)))
 	;	
 	//Data
-	SPDR = 0xFF;
+	SPDR = 0x00;
 	/* Wait for transmission complete */
 	while (!(SPSR & (1<<SPIF)))
 	;
@@ -182,4 +205,5 @@ unsigned char _SPI_Receive_Data(unsigned int Address)
 	/* Start transmission */
 	return	SPDR;
 }
+
 

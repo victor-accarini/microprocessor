@@ -65,9 +65,7 @@ int main(void)
 
 //	while(1)
 //	{
-		_delay_ms(1);
 		_Enable_SPI();
-		_SPI_Send_Data(0x0000,0x33);
 		_SPI_Send_Data(0x0000,0x33);
 		(*ADC_DataAddress) = _SPI_Receive_Data(0x0000);
 		//Input command
