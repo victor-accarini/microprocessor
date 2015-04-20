@@ -2,7 +2,7 @@ CC=avr-gcc
 LD=avr-ld
 OBJCPY=avr-objcopy
 MMCU=atmega8515
-CFLAGS=-Wall -I. -I/opt/avr8-gnu-toolchain-linux_x86_64/avr/include/
+CFLAGS=-Wall -Os -I. -I/opt/avr8-gnu-toolchain-linux_x86_64/avr/include/
 SOURCEDIR=Source
 BUILDDIR =Build
 

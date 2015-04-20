@@ -50,7 +50,7 @@ int main(void)
 	
 	unsigned int i, off1, off2, off3;
 	unsigned char str[160], arg1[15], arg2[15], arg3[15];
-	//unsigned int hexnum;
+	unsigned int hexnum;
 	
 	
 	// Systems Initializations
@@ -63,28 +63,13 @@ int main(void)
 	
 	ADC_DataAddress = (unsigned char*)0x4000;
 
-	//while(1)
-	//{
-		for (i = 0; i < 512; i++)
-		{
-			_ADC_Start();
-			_delay_ms(10);
-			DisableInterrupts();
-			_EEPROM_Send_Data(i,ADC_Data);
-			EnableInterrupts();
-		}
-		for (i = 0; i < 512; i++)
-		{
-			DisableInterrupts();
-			(*cp) = ~_EEPROM_Receive_Data(i);
-			EnableInterrupts();
-			Hex2Asc((unsigned int)(*cp),str);
-			putLine(str);
-		}
-		//if (ADC_Data == 0x33)
-		//	putLine((unsigned char*)"YES");
-		//else
-		//	putLine((unsigned char*)"NO");
+//	while(1)
+//	{
+		_delay_ms(1);
+		_Enable_SPI();
+		_SPI_Send_Data(0x0000,0x33);
+		_SPI_Send_Data(0x0000,0x33);
+		(*ADC_DataAddress) = _SPI_Receive_Data(0x0000);
 		//Input command
 		//getLine(str);
 		//putLine(str);
@@ -139,7 +124,7 @@ int main(void)
 			arg2[i-off2] = '\0';
 			D(arg1,arg2);
 		}//*/
-	//}//End while loop
+//	}//End while loop
 	
 	/*
 	if (strcmp(str, "Start") == 0){
