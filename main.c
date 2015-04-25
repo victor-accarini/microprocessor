@@ -58,16 +58,29 @@ int main(void)
 	_Init_UART(MYBAUD);
 	_Init_Peripheral();
 	_Init_ADC();
+	_Enable_SPI();
 	
 	EnableInterrupts();
 	
 	ADC_DataAddress = (unsigned char*)0x4000;
 
-//	while(1)
-//	{
-		_Enable_SPI();
-		_SPI_Send_Data(0x0000,0x33);
-		(*ADC_DataAddress) = _SPI_Receive_Data(0x0000);
+	//while(1)
+	//{
+		for (i = 0; i < 512; i++)
+		{			
+			_ADC_Start();
+			_delay_ms(10);
+			DisableInterrupts();
+			_SPI_Send_Data(i,ADC_Data);
+			EnableInterrupts();
+		}
+		for (i = 0; i < 512; i++)
+		{
+			DisableInterrupts();
+			Hex2Asc(_SPI_Receive_Data(i),str);
+			EnableInterrupts();
+			putLine(str);
+		}
 		//Input command
 		//getLine(str);
 		//putLine(str);
@@ -122,7 +135,7 @@ int main(void)
 			arg2[i-off2] = '\0';
 			D(arg1,arg2);
 		}//*/
-//	}//End while loop
+	//}//End while loop
 	
 	/*
 	if (strcmp(str, "Start") == 0){
